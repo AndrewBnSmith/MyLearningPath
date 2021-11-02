@@ -1,0 +1,72 @@
+﻿@page "/books"
+@inject IBookService BookService
+@inject NavigationManager NavigationManager
+@implements IDisposable
+<h3>Books in Learning Path</h3>
+
+@if (BookService.Books.Count == 0)
+ {
+<span>Loading books.....</span>
+ }   
+else
+{
+    <table class="table">
+        <thead>
+            <tr>
+                <th>Title</th>
+                <th>Author</th>
+                <th>BookType</th>
+                <th></th>
+                <th></th>
+            </tr>
+            
+        </thead>
+        <tbody>
+            @foreach(var book in BookService.Books)
+                {
+            <tr>
+                <td>@book.Title</td>
+                <td>@book.Author</td>
+                <td>@book.BookType.Name</td>
+                <td>
+                    <button class="btn btn-primary" @onclick="(() => ShowBook(book.Id))">Show</button>
+                </td>
+                <td>
+                    <button class="btn btn-primary" @onclick="(() => EditBook(book.Id))">Edit</button>
+                </td>
+                
+            </tr>
+                }
+        </tbody>
+    </table>
+}
+         
+<EditBook Book="bookToEdit"></EditBook>   
+
+@code { 
+
+    MyLearningPath.Shared.Book bookToEdit = new MyLearningPath.Shared.Book();
+
+    protected override async Task OnInitializedAsync()
+    {
+        await BookService.GetBooks();
+        BookService.OnChange += StateHasChanged;
+
+    }
+
+    void ShowBook(int id)
+    {
+        NavigationManager.NavigateTo($"book/{id}");
+    }
+
+    void EditBook(int id)
+    {
+        bookToEdit = BookService.Books.Find(h => h.Id == id);
+    }
+
+    public void Dispose()
+    {
+        BookService.OnChange -= StateHasChanged;
+    }
+
+}

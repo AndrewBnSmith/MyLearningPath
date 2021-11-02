@@ -1,0 +1,19 @@
+﻿@page "/book/{id:int}"
+@inject IBookService BookService
+
+<h3>Book</h3>
+
+
+@code {
+    [Parameter]
+    public int Id { get; set; }
+
+    MyLearningPath.Shared.Book book = new MyLearningPath.Shared.Book();
+
+    protected override async Task OnInitializedAsync()
+    {
+        book = await BookService.GetBook(Id);
+
+    }
+
+}

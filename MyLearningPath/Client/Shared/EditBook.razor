@@ -1,0 +1,31 @@
+﻿@inject IBookService BookService
+@inject IJSRuntime JSRuntime
+
+<h3>EditBook</h3>
+
+<EditForm Model="Book" OnSubmit="HandleSubmit">
+    <div class="form-group">
+        <label>Title</label>
+        <InputText @bind-Value="Book.Title" class="form-control"></InputText>
+    </div>
+    <div class="form-group">
+        <label>Author</label>
+        <InputText @bind-Value="Book.Author" class="form-control"></InputText>
+    </div>
+    <button type="submit" class="btn btn-primary">Submit</button>
+
+</EditForm>
+@code {
+   // [Parameter]
+   // public MyLearningPath.Shared.Book BookToEdit { get; set; }
+
+    [Parameter]
+    public MyLearningPath.Shared.Book Book { get; set; } = new MyLearningPath.Shared.Book();
+
+   async void HandleSubmit()
+    {
+        Console.WriteLine("Submit was called");
+       await JSRuntime.InvokeVoidAsync("console.log", Book);
+        await BookService.CreateSingleBook(Book);
+    }
+}
