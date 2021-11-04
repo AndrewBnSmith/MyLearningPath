@@ -1,31 +1,65 @@
 ﻿@inject IBookService BookService
 @inject IJSRuntime JSRuntime
 
-<h3>EditBook</h3>
 
-<EditForm Model="Book" OnSubmit="HandleSubmit">
-    <div class="form-group">
-        <label>Title</label>
-        <InputText @bind-Value="Book.Title" class="form-control"></InputText>
-    </div>
-    <div class="form-group">
-        <label>Author</label>
-        <InputText @bind-Value="Book.Author" class="form-control"></InputText>
-    </div>
-    <button type="submit" class="btn btn-primary">Submit</button>
-
-</EditForm>
-@code {
-   // [Parameter]
-   // public MyLearningPath.Shared.Book BookToEdit { get; set; }
-
-    [Parameter]
-    public MyLearningPath.Shared.Book Book { get; set; } = new MyLearningPath.Shared.Book();
-
-   async void HandleSubmit()
-    {
-        Console.WriteLine("Submit was called");
-       await JSRuntime.InvokeVoidAsync("console.log", Book);
-        await BookService.CreateSingleBook(Book);
-    }
+@if (Book.Id == 0)
+{
+    <h3>Create a new Book</h3>
 }
+else
+{
+    <h3>Edit '@Book.Title'</h3>
+}
+    <EditForm Model="Book" OnSubmit="HandleSubmit">
+        <div class="form-group">
+            <label>Title</label>
+            <InputText @bind-Value="Book.Title" class="form-control"></InputText>
+        </div>
+        <div class="form-group">
+            <label>Author</label>
+            <InputText @bind-Value="Book.Author" class="form-control"></InputText>
+        </div>
+        <div class="form-group">
+            <label>BookType</label><br />
+            <InputRadioGroup @bind-Value="bookTypeId" class="form-control">
+                @foreach (var bookType in BookService.BookTypes)
+                {
+                    <InputRadio Value="@bookType.Id" /><span style="padding-left: 5px;">@bookType.Name</span><br />
+                }
+            </InputRadioGroup>
+        </div>
+        <button type="submit" class="btn btn-primary">Submit</button>
+
+    </EditForm>
+    @code {
+            // [Parameter]
+            // public MyLearningPath.Shared.Book BookToEdit { get; set; }
+
+            [Parameter]
+            public MyLearningPath.Shared.Book Book { get; set; } = new MyLearningPath.Shared.Book();
+            int bookTypeId = 1; 
+
+        protected override async Task OnParametersSetAsync()
+        {
+            await BookService.GetBookTypes();
+         
+            bookTypeId = Book.BookTypeId;
+        }
+        async void HandleSubmit()
+        {
+            Book.BookType = null;
+            Book.BookTypeId = bookTypeId;
+
+            await JSRuntime.InvokeVoidAsync("console.log", Book);
+
+            if (Book.Id == 0)
+            {
+                await BookService.CreateSingleBook(Book);
+            }
+            else
+            {
+                await BookService.UpdateBook(Book, Book.Id);
+            }
+
+        }
+    }

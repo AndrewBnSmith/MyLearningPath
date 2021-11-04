@@ -14,6 +14,8 @@ namespace MyLearningPath.Server.Data
 
         }
 
+        
+
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             modelBuilder.Entity<BookType>().HasData(
@@ -22,8 +24,8 @@ namespace MyLearningPath.Server.Data
             );
 
             modelBuilder.Entity<Book>().HasData(
-                new Book { Id = 1, Title = "CSharp Beginner", Author = "Oreilly"},
-                new Book { Id = 2, Title = "Java Beginner", Author = "Camden" }
+                new Book { Id = 1, Title = "CSharp Beginner", Author = "Oreilly", BookTypeId = 1 },
+                new Book { Id = 2, Title = "Java Beginner", Author = "Camden" , BookTypeId = 2 }
         
             );
         }
