@@ -57,53 +57,53 @@ namespace MyLearningPath.Server.Controllers
                 .Include(sh => sh.BookType)
                 .FirstOrDefaultAsync(h => h.Id == id);
             if (book == null)
-                return NotFound("Super Hero wasn't found. Too bad. :(");
+                return NotFound("Book wasn't found.");
 
             return Ok(book);
-
-            [HttpPost]
-             async Task<IActionResult> CreateSingleBook(Book book)
-            {
-                _context.Books.Add(book);
-                await _context.SaveChangesAsync();
-
-                return Ok(await GetDbBooks());
-            }
-
-            [HttpPut("{id}")]
-             async Task<IActionResult> UpdateBook(Book book, int id)
-            {
-                var dbBook = await _context.Books
-                    .Include(sh => sh.BookType)
-                    .FirstOrDefaultAsync(h => h.Id == id);
-                if (dbBook == null)
-                    return NotFound("Book wasn't found.");
-
-                dbBook.Title = book.Title;
-                dbBook.Author = book.Author;
-
-                dbBook.BookTypeId = book.BookTypeId;
-
-                await _context.SaveChangesAsync();
-
-                return Ok(await GetDbBooks());
-            }
-
-            [HttpDelete("{id}")]
-             async Task<IActionResult> DeleteBook(int id)
-            {
-                var dbBook = await _context.Books
-                    .Include(sh => sh.BookType)
-                    .FirstOrDefaultAsync(h => h.Id == id);
-                if (dbBook == null)
-                    return NotFound("Book wasn't found.");
-
-                _context.Books.Remove(dbBook);
-                await _context.SaveChangesAsync();
-
-                return Ok(await GetDbBooks());
-            }
-
         }
+        [HttpPost]
+        public async Task<IActionResult> CreateSingleBook(Book book)
+        {
+            _context.Books.Add(book);
+            await _context.SaveChangesAsync();
+
+            return Ok(await GetDbBooks());
+        }
+
+        [HttpPut("{id}")]
+        public async Task<IActionResult> UpdateBook(Book book, int id)
+        {
+            var dbBook = await _context.Books
+                .Include(sh => sh.BookType)
+                .FirstOrDefaultAsync(h => h.Id == id);
+            if (dbBook == null)
+                return NotFound("Book wasn't found.");
+
+            dbBook.Title = book.Title;
+            dbBook.Author = book.Author;
+
+            dbBook.BookTypeId = book.BookTypeId;
+
+            await _context.SaveChangesAsync();
+
+            return Ok(await GetDbBooks());
+        }
+
+        [HttpDelete("{id}")]
+        public async Task<IActionResult> DeleteBook(int id)
+        {
+            var dbBook = await _context.Books
+                .Include(sh => sh.BookType)
+                .FirstOrDefaultAsync(h => h.Id == id);
+            if (dbBook == null)
+                return NotFound("Book wasn't found.");
+
+            _context.Books.Remove(dbBook);
+            await _context.SaveChangesAsync();
+
+            return Ok(await GetDbBooks());
+        }
+
+
     }
 }

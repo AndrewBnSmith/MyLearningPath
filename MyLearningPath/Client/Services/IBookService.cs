@@ -12,7 +12,7 @@ namespace MyLearningPath.Client.Services
         List<BookType> BookTypes { get; set; }
         List<Book> Books { get; set; }
         Task<List<Book>> GetBooks();
-        Task GetBookType();
+        Task GetBookTypes();
         Task<Book> GetBook(int id);
         Task<List<Book>> CreateSingleBook(Book book);
         Task<List<Book>> UpdateBook(Book book, int id);

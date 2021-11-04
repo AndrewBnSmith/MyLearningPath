@@ -34,14 +34,17 @@ else
                 <td>
                     <button class="btn btn-primary" @onclick="(() => EditBook(book.Id))">Edit</button>
                 </td>
-                
+                <td>
+                    <button class="btn btn-primary" @onclick="(() => DeleteBook(book.Id))">Delete</button>
+                </td>
+
             </tr>
                 }
         </tbody>
     </table>
 }
          
-<EditBook Book="bookToEdit"></EditBook>   
+<EditBook Book ="bookToEdit"></EditBook>
 
 @code { 
 
@@ -62,6 +65,11 @@ else
     void EditBook(int id)
     {
         bookToEdit = BookService.Books.Find(h => h.Id == id);
+    }
+
+    void DeleteBook(int id)
+    {
+        BookService.DeleteBook(id);
     }
 
     public void Dispose()

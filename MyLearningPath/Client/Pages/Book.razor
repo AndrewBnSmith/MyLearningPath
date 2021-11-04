@@ -1,8 +1,15 @@
 ﻿@page "/book/{id:int}"
 @inject IBookService BookService
 
-<h3>Book</h3>
-
+@if (book == null)
+{
+    <span>Book is loading..................................</span>
+}
+else
+{
+    <h3>This is @book.Title, by @book.Author </h3>
+    <span>This Book belongs to @book.BookType.Name.</span>
+}
 
 @code {
     [Parameter]
